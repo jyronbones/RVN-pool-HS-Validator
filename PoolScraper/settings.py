@@ -1,3 +1,10 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
+
 SITE_URL = "https://www.ravenminer.com/ravencoin/wallet/REuaQ4hVkipRsu6tX27iENPrHxGpvfkFh9"
 
 # Scraper values Wallet Stats
@@ -31,7 +38,7 @@ WORKER_1_RIG_NAME = "/html/body/main/div[4]/div[2]/div[2]/div[1]/div/div/table/t
 WORKER_1_HS = "/html/body/main/div[4]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[1]/td[3]/span[1]"
 WORKER_1_DIFFICULTY = "/html/body/main/div[4]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[1]/td[4]"
 WORKER_1_SPM = "/html/body/main/div[4]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[1]/td[5]"
-WORKER_1_CONNECT_TIME = "/html/body/main/div[4]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[1]/td[5]"
+WORKER_1_CONNECT_TIME = "/html/body/main/div[4]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[1]/td[6]"
 WORKER_1_LAST_SEEN = "/html/body/main/div[4]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[2]/td[7]"
 WORKER_1_LAST_SHARE = "/html/body/main/div[4]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[1]/td[8]"
 WORKER_1_SERVER = "/html/body/main/div[4]/div[2]/div[2]/div[1]/div/div/table/tbody/tr[1]/td[9]"

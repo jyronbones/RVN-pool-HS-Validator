@@ -1,6 +1,7 @@
 from utils.proxy_manager import ProxyManager
+from utils.database_manager import DatabaseManager
 from scrape.scraper import Scraper
-from settings import SITE_URL
+from settings import SITE_URL, DB_CONNECTION_STRING
 
 
 def main():
@@ -8,9 +9,13 @@ def main():
     proxy = proxy_manager.get_random_proxy()
     print(f"Using proxy: {proxy}")
 
-    scraper = Scraper(SITE_URL)
+    # Initialize the DatabaseManager with the connection string from settings.py
+    db_manager = DatabaseManager(DB_CONNECTION_STRING)
+
+    # Create the Scraper instance with the database manager
+    scraper = Scraper(SITE_URL, db_manager)
     scraper.start(proxy)
-    scraper.run()
+    scraper.run()  # Also inserts data into DB
 
 
 if __name__ == "__main__":
