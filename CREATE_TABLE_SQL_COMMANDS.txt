@@ -1,0 +1,42 @@
+CREATE TABLE WalletStats (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    HashRate FLOAT,
+    OnlineWorkers INT,
+    OfflineWorkers INT,
+    PayoutCoin NVARCHAR(255),
+    ClearedBalance FLOAT,
+    Timestamp DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE EarningHistory (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    OneDay FLOAT,
+    SevenDays FLOAT,
+    FourteenDays FLOAT,
+    ThirtyDays FLOAT,
+    Timestamp DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE HashRates (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    FiveMin FLOAT,
+    OneHour FLOAT,
+    SixHours FLOAT,
+    TwelveHours FLOAT,
+    TwentyFourHours FLOAT,
+    Timestamp DATETIME DEFAULT GETDATE()
+);
+
+CREATE TABLE Workers (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    RigName NVARCHAR(255),
+    Hashrate FLOAT,
+    Difficulty FLOAT,
+    SPM FLOAT,
+    ConnectTime NVARCHAR(255),
+    LastSeen NVARCHAR(255),
+    LastShare NVARCHAR(255),
+    Server NVARCHAR(255),
+    Type NVARCHAR(50),
+    Timestamp DATETIME DEFAULT GETDATE()
+);
