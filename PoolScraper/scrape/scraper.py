@@ -6,6 +6,7 @@ import settings
 from configurations.driver_setup import WebDriverConfig
 from settings import *
 import threading
+import keyboard
 
 
 class Scraper:
@@ -99,8 +100,9 @@ class Scraper:
         stop_flag = threading.Event()
 
         def wait_for_exit_command():
-            input("Press Enter to stop the scraper at any time...\n")
-            stop_flag.set()
+            print("Press CTRL+SHIFT+Q to stop the scraper at any time...")
+            keyboard.add_hotkey('ctrl+shift+q', lambda: stop_flag.set())
+            keyboard.wait('ctrl+shift+q')
             if self.driver:
                 self.driver.quit()
 

@@ -16,7 +16,7 @@ class WebDriverConfig:
         } if proxy else {}
 
         chrome_options = webdriver.ChromeOptions()
-        chrome_options.headless = False
+        chrome_options.headless = True
         chrome_options.add_argument('start-maximized')
         chrome_options.add_argument("window-size=1900,1080")
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')
