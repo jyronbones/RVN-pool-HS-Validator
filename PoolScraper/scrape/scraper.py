@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import settings
 from configurations.driver_setup import WebDriverConfig
 from settings import *
+import threading
 
 
 class Scraper:
@@ -88,7 +89,6 @@ class Scraper:
             self.db_manager.disconnect()
 
     def scrape(self):
-        print(f"Accessing {self.site_url}")
         self.driver.get(self.site_url)
         self.scrape_wallet_stats()
         self.scrape_earning_history()
@@ -96,10 +96,31 @@ class Scraper:
         self.scrape_workers()
 
     def run(self):
-        try:
-            self.scrape()
-            self.save_data()
-        finally:
-            time.sleep(10)
+        stop_flag = threading.Event()
+
+        def wait_for_exit_command():
+            input("Press Enter to stop the scraper at any time...\n")
+            stop_flag.set()
             if self.driver:
                 self.driver.quit()
+
+        # Start the thread that will wait for the input
+        exit_thread = threading.Thread(target=wait_for_exit_command)
+        exit_thread.start()
+
+        try:
+            while not stop_flag.is_set():  # Run until the flag is set
+                self.scrape()
+                self.save_data()
+                time.sleep(20)
+                self.driver.refresh()
+                time.sleep(2)
+
+        finally:
+            if not stop_flag.is_set():
+                # If the flag is not set, it means the loop was interrupted unexpectedly
+                stop_flag.set()
+            exit_thread.join()  # Wait for the exit command thread to finish
+            if self.driver:
+                self.driver.quit()  # Close the browser window
+            print("Scraper has been stopped.")
