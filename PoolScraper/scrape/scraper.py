@@ -33,9 +33,28 @@ class Scraper:
         cleaned_value = ''.join(c for c in value if c.isdigit() or c == '.')
         return float(cleaned_value) if cleaned_value else 0.0
 
+    def get_element_text_with_wait(self, xpath, timeout=10, poll_frequency=0.5):
+        """
+        Wait for the element text to change from its initial value within a timeout period.
+        Polls the element's text at specified intervals.
+        """
+        end_time = time.time() + timeout
+        while True:
+            try:
+                element_text = self.get_element_text(xpath)
+                if element_text != "0":
+                    return element_text
+            except Exception as e:
+                print(f"Error while waiting for element text to change: {e}")
+            time.sleep(poll_frequency)  # Wait before checking again
+            if time.time() > end_time:
+                break
+        return "-1"
+
     def scrape_wallet_stats(self):
         hash_rate = self.clean_numeric(self.get_element_text(WALLET_HASH_RATE))
-        online_workers = int(self.clean_numeric(self.get_element_text(WALLET_ONLINE_WORKERS)))
+        online_workers_text = self.get_element_text_with_wait(WALLET_ONLINE_WORKERS, timeout=5)
+        online_workers = int(self.clean_numeric(online_workers_text))
         offline_workers = int(self.clean_numeric(self.get_element_text(WALLET_OFFLINE_WORKERS)))
         payout_coin = self.get_element_text(WALLET_PAYOUT_COIN)
         cleared_balance = self.clean_numeric(self.get_element_text(WALLET_CLEARED_BALANCE))
@@ -91,6 +110,7 @@ class Scraper:
 
     def scrape(self):
         self.driver.get(self.site_url)
+        time.sleep(2)
         self.scrape_wallet_stats()
         self.scrape_earning_history()
         self.scrape_hash_rates()
@@ -110,13 +130,17 @@ class Scraper:
         exit_thread = threading.Thread(target=wait_for_exit_command)
         exit_thread.start()
 
+        refresh_counter = 0
         try:
             while not stop_flag.is_set():  # Run until the flag is set
                 self.scrape()
                 self.save_data()
-                time.sleep(20)
-                self.driver.refresh()
-                time.sleep(2)
+                time.sleep(15)
+                refresh_counter += 1
+                time.sleep(1)
+                if refresh_counter >= 30:
+                    self.driver.refresh()
+                    refresh_counter = 0
 
         finally:
             if not stop_flag.is_set():

@@ -26,7 +26,9 @@ class WebDriverConfig:
             "Chrome/87.0.4280.141 Safari/537.36"
         )
 
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                                  seleniumwire_options=seleniumwire_options,
-                                  options=chrome_options)
+        driver = webdriver.Chrome(
+            service=Service(ChromeDriverManager().install()),
+            seleniumwire_options=seleniumwire_options,
+            options=chrome_options
+        )
         return driver
